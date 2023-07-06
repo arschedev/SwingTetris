@@ -2,19 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TetrisGame extends JFrame {
-
     public TetrisGame() {
-        initUI();
+        init();
     }
 
-    private void initUI() {
+    private void init() {
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         Board board = new Board();
         add(board);
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null); // center frame
     }
 
     public static void main(String[] args) {
@@ -26,24 +25,39 @@ public class TetrisGame extends JFrame {
 }
 
 class Board extends JPanel {
-
-    private final int TILE_SIZE = 30;
+    private final int TILE_SIZE = 40;
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 20;
-    private Color[][] boardGrid;
+    private final Color DEFAULT_TILE_COLOR = Color.BLACK;
+    private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
+    private final Color[][] boardGrid; // 2d array of colors
 
     public Board() {
         setPreferredSize(new Dimension(TILE_SIZE * BOARD_WIDTH, TILE_SIZE * BOARD_HEIGHT));
-        boardGrid = new Color[BOARD_HEIGHT][BOARD_WIDTH];
-        clearBoard();
+        boardGrid = new Color[BOARD_HEIGHT][BOARD_WIDTH]; // initialize board
+        fillBoard();
+
+        //
+        fillTile(0, 0, Color.RED);
+        fillTile(BOARD_WIDTH - 1, 0, Color.RED);
+        fillTile(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, Color.RED);
+        fillTile(0, BOARD_HEIGHT - 1, Color.RED);
     }
 
-    private void clearBoard() {
+    private void fillBoard() {
+        fillBoard(DEFAULT_TILE_COLOR);
+    }
+
+    private void fillBoard(Color color) {
         for (int row = 0; row < BOARD_HEIGHT; row++) {
             for (int col = 0; col < BOARD_WIDTH; col++) {
-                boardGrid[row][col] = Color.BLACK;
+                boardGrid[row][col] = color;
             }
         }
+    }
+
+    private void fillTile(int x, int y, Color color) {
+        boardGrid[y][x] = color;
     }
 
     @Override
@@ -54,13 +68,9 @@ class Board extends JPanel {
             for (int col = 0; col < BOARD_WIDTH; col++) {
                 g.setColor(boardGrid[row][col]);
                 g.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                g.setColor(Color.BLACK);
+                g.setColor(DEFAULT_BORDER_COLOR);
                 g.drawRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
     }
-
-
-
 }
-
