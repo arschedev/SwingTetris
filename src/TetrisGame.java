@@ -32,6 +32,7 @@ class Board extends JPanel {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color[][] boardGrid; // 2d array of colors
 
+
     public Board() {
         setPreferredSize(new Dimension(TILE_SIZE * BOARD_WIDTH, TILE_SIZE * BOARD_HEIGHT));
         boardGrid = new Color[BOARD_HEIGHT][BOARD_WIDTH]; // initialize board
