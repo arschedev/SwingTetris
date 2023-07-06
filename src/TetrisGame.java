@@ -38,11 +38,12 @@ class Board extends JPanel {
         boardGrid = new Color[BOARD_HEIGHT][BOARD_WIDTH]; // initialize board
         fillBoard();
 
-        //
         fillTile(0, 0, Color.RED);
         fillTile(BOARD_WIDTH - 1, 0, Color.RED);
         fillTile(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, Color.RED);
         fillTile(0, BOARD_HEIGHT - 1, Color.RED);
+        fillTile(1, 1, Color.WHITE);
+
     }
 
     private void fillBoard() {
@@ -73,5 +74,14 @@ class Board extends JPanel {
                 g.drawRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
+    }
+
+    public static int randomizer(int min, int max) {
+        return (int) Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+
+    public void Moving() {
+        fillTile(1, 1, Color.WHITE);
     }
 }
