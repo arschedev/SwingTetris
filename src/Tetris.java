@@ -5,8 +5,8 @@ import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TetrisGame extends JFrame {
-    public TetrisGame() {
+public class Tetris extends JFrame {
+    public Tetris() {
         init();
     }
 
@@ -23,7 +23,7 @@ public class TetrisGame extends JFrame {
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            TetrisGame tetris = new TetrisGame();
+            Tetris tetris = new Tetris();
             tetris.setVisible(true);
         });
     }
