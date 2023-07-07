@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,6 +18,7 @@ public class TetrisGame extends JFrame {
         add(board);
         pack();
         setLocationRelativeTo(null); // center frame
+        addKeyListener(board); // Add KeyListener to the board
     }
 
     public static void main(String[] args) {
@@ -26,7 +29,8 @@ public class TetrisGame extends JFrame {
     }
 }
 
-class Board extends JPanel {
+class Board extends JPanel implements KeyListener {
+
     private final int TILE_SIZE = 40;
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 20;
@@ -39,11 +43,10 @@ class Board extends JPanel {
         boardGrid = new Color[BOARD_HEIGHT][BOARD_WIDTH]; // initialize board
         fillBoard();
 
-        //
-        fillTile(0, 0, Color.RED);
-        fillTile(BOARD_WIDTH - 1, 0, Color.RED);
-        fillTile(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, Color.RED);
-        fillTile(0, BOARD_HEIGHT - 1, Color.RED);
+         fillTile(0, 0, Color.RED);
+         fillTile(BOARD_WIDTH - 1, 0, Color.RED);
+         fillTile(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, Color.RED);
+         fillTile(0, BOARD_HEIGHT - 1, Color.RED);
     }
 
     private void fillTile(int x, int y, Color color) {
@@ -90,5 +93,35 @@ class Board extends JPanel {
 
     private int random(int min, int max) {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyChar() == 'a') {
+            fillTile(4, 4, Color.WHITE);
+            fillTile(3,4,Color.white);
+            fillTile(5,4,Color.white);
+            fillTile(4,3,Color.white);
+            fillTile(4,2,Color.white);
+            repaint(); // Redrawing the board
+        }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyChar() == 'a') {
+            fillTile(4,4,Color.BLACK);
+            fillTile(3,4,Color.black);
+            fillTile(5,4,Color.black);
+            fillTile(4,3,Color.black);
+            fillTile(4,2,Color.black);
+            repaint();
+        }
     }
 }
