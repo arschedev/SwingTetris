@@ -78,8 +78,8 @@ class Board extends JPanel implements KeyListener {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                // floor limit
-                if (yPos + 1 >= BOARD_HEIGHT) {
+                // reached limits of floor or tiles
+                if (yPos + 1 >= BOARD_HEIGHT || getTile(xPos, yPos + 1) != DEFAULT_TILE_COLOR) {
                     // new active tile
                     xPos = Utils.random(0, 9);
                     yPos = -1;
@@ -97,6 +97,10 @@ class Board extends JPanel implements KeyListener {
         boardGrid[y][x] = color;
     }
 
+    private Color getTile(int x, int y) {
+        return boardGrid[y][x];
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'p') {
@@ -105,19 +109,22 @@ class Board extends JPanel implements KeyListener {
 
         if (e.getKeyChar() == 'a') {
             fillTile(xPos, yPos, DEFAULT_TILE_COLOR); // remove previous tile
-            if (xPos > 0) xPos--; // decrement x position
+            if (xPos > 0 && getTile(xPos - 1, yPos) == DEFAULT_TILE_COLOR)  /* is aside from wall and other tiles */
+                xPos--; // decrement x position
             fillTile(xPos, yPos, ACTIVE_TILE_COLOR); // fill current tile
         }
 
         if (e.getKeyChar() == 'd') {
             fillTile(xPos, yPos, DEFAULT_TILE_COLOR); // remove previous tile
-            if (xPos < BOARD_WIDTH - 1) xPos++; // increment x position
+            if (xPos < BOARD_WIDTH - 1 && getTile(xPos + 1, yPos) == DEFAULT_TILE_COLOR) /* is aside from wall and other tiles */
+                xPos++; // increment x position
             fillTile(xPos, yPos, ACTIVE_TILE_COLOR); // fill current tile
         }
 
         if (e.getKeyChar() == 's') {
             fillTile(xPos, yPos, DEFAULT_TILE_COLOR); // remove previous tile
-            if (yPos < BOARD_HEIGHT - 1) yPos++; // increment y position
+            if (yPos < BOARD_HEIGHT - 1 && getTile(xPos, yPos + 1) == DEFAULT_TILE_COLOR) /* is above floor level and other tiles */
+                yPos++; // increment y position
             fillTile(xPos, yPos, ACTIVE_TILE_COLOR); // fill current tile
         }
 
