@@ -30,7 +30,6 @@ public class Tetris extends JFrame {
 }
 
 class Board extends JPanel implements KeyListener {
-
     private final int TILE_SIZE = 30;
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 20;
@@ -103,31 +102,27 @@ class Board extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == 'p') {
+        if (e.getKeyChar() == 'p' || e.getKeyChar() == 'з') {
             init();
         }
-
-        if (e.getKeyChar() == 'a') {
+        if (e.getKeyChar() == 'a' || e.getKeyChar() == 'ф') {
             fillTile(xPos, yPos, DEFAULT_TILE_COLOR); // remove previous tile
-            if (xPos > 0 && getTile(xPos - 1, yPos) == DEFAULT_TILE_COLOR)  /* is aside from wall and other tiles */
+            if (xPos > 0 && getTile(xPos - 1, yPos) == DEFAULT_TILE_COLOR) // is aside from wall and other tiles
                 xPos--; // decrement x position
             fillTile(xPos, yPos, ACTIVE_TILE_COLOR); // fill current tile
         }
-
-        if (e.getKeyChar() == 'd') {
+        if (e.getKeyChar() == 'd' || e.getKeyChar() == 'в') {
             fillTile(xPos, yPos, DEFAULT_TILE_COLOR); // remove previous tile
-            if (xPos < BOARD_WIDTH - 1 && getTile(xPos + 1, yPos) == DEFAULT_TILE_COLOR) /* is aside from wall and other tiles */
+            if (xPos < BOARD_WIDTH - 1 && getTile(xPos + 1, yPos) == DEFAULT_TILE_COLOR) //  is aside from wall and other tiles */
                 xPos++; // increment x position
             fillTile(xPos, yPos, ACTIVE_TILE_COLOR); // fill current tile
         }
-
-        if (e.getKeyChar() == 's') {
+        if (e.getKeyChar() == 's' || e.getKeyChar() == 'ы' || e.getKeyChar() == 'і') {
             fillTile(xPos, yPos, DEFAULT_TILE_COLOR); // remove previous tile
-            if (yPos < BOARD_HEIGHT - 1 && getTile(xPos, yPos + 1) == DEFAULT_TILE_COLOR) /* is above floor level and other tiles */
+            if (yPos < BOARD_HEIGHT - 1 && getTile(xPos, yPos + 1) == DEFAULT_TILE_COLOR) // is above floor level and other tiles */
                 yPos++; // increment y position
             fillTile(xPos, yPos, ACTIVE_TILE_COLOR); // fill current tile
         }
-
         repaint(); // Redrawing the board
     }
 
@@ -226,3 +221,4 @@ class Board extends JPanel implements KeyListener {
         }
     }
 }
+
