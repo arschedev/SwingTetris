@@ -33,11 +33,11 @@ class Board extends JPanel implements KeyListener {
     private final int TILE_SIZE = 30;
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 20;
+    private final Color[][] boardGrid; // 2d array of colors
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
-    private final Color ACTIVE_TILE_COLOR = Color.RED;
-    private final Color[][] boardGrid; // 2d array of colors
-    private char currentTetromino = Utils.randomTetromino(2);
+    private Color ACTIVE_TILE_COLOR = Utils.randomColor();
+    private char currentTetromino = Utils.randomTetromino();
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
     private int linesCleared = 0;
@@ -97,15 +97,16 @@ class Board extends JPanel implements KeyListener {
                 // reached limits of floor or other tetrominos
                 if (yPos + 1 >= BOARD_HEIGHT || tetrominoWillCollide(xPos, yPos, currentTetromino, "down")) {
                     // new active tetromino
-                    currentTetromino = Utils.randomTetromino(2);
+                    ACTIVE_TILE_COLOR = Utils.randomColor();
+                    currentTetromino = Utils.randomTetromino();
                     xPos = Utils.random(1, 7);
                     yPos = -1;
                 }
 
                 yPos++; // increment y position
                 if (yPos > 0)
-                    fillTetromino(xPos, yPos - 1, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tile
-                fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tile
+                    fillTetromino(xPos, yPos - 1, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tetromino
+                fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tetromino
                 repaint(); // Redrawing the board
                 clearLines();
             }
@@ -207,9 +208,17 @@ class Board extends JPanel implements KeyListener {
             if (x + 1 + right >= BOARD_WIDTH) return true;
             if (getTile(x, y + down) != DEFAULT_TILE_COLOR) return true;
             if (getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR) return true;
-            if (y > 0 && (left == 1 || right == 1) && getTile(x - 1 - left + right, y - 1) != DEFAULT_TILE_COLOR)
-                return true;
-            return getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR;
+            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
+            return y > 0 && (left == 1 || right == 1) && getTile(x - 1 - left + right, y - 1) != DEFAULT_TILE_COLOR;
+        }
+
+        if (tetromino == 'L') {
+            if (x - 1 - left < 0) return true;
+            if (x + 1 + right >= BOARD_WIDTH) return true;
+            if (getTile(x, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
+            return y > 0 && (left == 1 || right == 1) && getTile(x + 1 - left + right, y - 1) != DEFAULT_TILE_COLOR;
         }
 
         if (tetromino == 'O') {
@@ -218,10 +227,35 @@ class Board extends JPanel implements KeyListener {
             if (getTile(x - left, y + down) != DEFAULT_TILE_COLOR) return true;
             if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
             if (y > 0 && (left == 1) && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR) return true;
-            if (y > 0 && (right == 1) && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR) return true;
+            return y > 0 && (right == 1) && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR;
         }
 
-        /* TODO */
+        if (tetromino == 'S') {
+            if (x - 1 - left < 0) return true;
+            if (x + 1 + right >= BOARD_WIDTH) return true;
+            if (getTile(x + right, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (y > 0 && (left == 1) && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR) return true;
+            return y > 0 && (right == 1) && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR;
+        }
+
+        if (tetromino == 'T') {
+            if (x - 1 - left < 0) return true;
+            if (x + 1 + right >= BOARD_WIDTH) return true;
+            if (getTile(x, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
+            return y > 0 && (left == 1 || right == 1) && getTile(x - left + right, y - 1) != DEFAULT_TILE_COLOR;
+        }
+
+        if (tetromino == 'Z') {
+            if (x - 1 - left < 0) return true;
+            if (x + 1 + right >= BOARD_WIDTH) return true;
+            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x - left, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (y > 0 && (left == 1) && getTile(x - 1 - left, y - 1) != DEFAULT_TILE_COLOR) return true;
+            return y > 0 && (right == 1) && getTile(x + right, y - 1) != DEFAULT_TILE_COLOR;
+        }
 
         return false;
     }
@@ -276,14 +310,13 @@ class Utils {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    public static char randomTetromino(int max) {
-        final char[] tetrominos = {'I', 'J', 'O', 'L', 'S', 'T', 'Z'};
-        return tetrominos[random(0, max)];
+    public static char randomTetromino() {
+        final char[] tetrominos = {'I', 'J', 'L', 'O', 'S', 'T', 'Z'};
+        return tetrominos[random(0, tetrominos.length - 1)];
     }
 
     public static Color randomColor() {
-        // TODO
-        final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE};
-        return colors[random(0, 2)];
+        final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.ORANGE, Color.PINK};
+        return colors[random(0, colors.length - 1)];
     }
 }
