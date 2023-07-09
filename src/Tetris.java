@@ -40,6 +40,8 @@ class Board extends JPanel implements KeyListener {
     private char currentTetromino = Utils.randomTetromino(2);
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
+    private int linesCleared = 0;
+
 
     public Board() {
         setPreferredSize(new Dimension(TILE_SIZE * BOARD_WIDTH, TILE_SIZE * BOARD_HEIGHT));
@@ -58,6 +60,20 @@ class Board extends JPanel implements KeyListener {
                 g.drawRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
+        for (int row = 0; row < BOARD_HEIGHT; row++) {
+            boolean lineFilled = true;
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                if (boardGrid[row][col] == DEFAULT_TILE_COLOR) {
+                    lineFilled = false;
+                    break;
+                }
+            }
+            if (lineFilled) {
+                g.setColor(Color.GRAY);
+                g.fillRect(0, row * TILE_SIZE, BOARD_WIDTH * TILE_SIZE, TILE_SIZE);
+            }
+        }
+
     }
 
     private void fillBoard() {
@@ -91,8 +107,33 @@ class Board extends JPanel implements KeyListener {
                     fillTetromino(xPos, yPos - 1, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tile
                 fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tile
                 repaint(); // Redrawing the board
+                clearLines();
             }
         }, 0, 1000);
+    }
+    public int getLinesCleared() {
+        return linesCleared;
+    }
+
+    private void clearLines() {
+        for (int row = BOARD_HEIGHT - 1; row >= 0; row--) {
+            boolean lineFilled = true;
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                if (boardGrid[row][col] == DEFAULT_TILE_COLOR) {
+                    lineFilled = false;
+                    break;
+                }
+            }
+            if (lineFilled) {
+                for (int r = row; r > 0; r--) {
+                    System.arraycopy(boardGrid[r - 1], 0, boardGrid[r], 0, BOARD_WIDTH);
+                }
+                for (int col = 0; col < BOARD_WIDTH; col++) {
+                    boardGrid[0][col] = DEFAULT_TILE_COLOR;
+                }
+                linesCleared++;
+            }
+        }
     }
 
     private void fillTetromino(int x, int y, Color color, char tetromino) {
