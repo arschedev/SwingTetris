@@ -37,7 +37,7 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private final Color ACTIVE_TILE_COLOR = Color.RED;
     private final Color[][] boardGrid; // 2d array of colors
-    private char currentTetromino = 'I';
+    private char currentTetromino = Utils.randomTetromino(2);
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
 
@@ -80,7 +80,8 @@ class Board extends JPanel implements KeyListener {
             public void run() {
                 // reached limits of floor or other tetrominos
                 if (yPos + 1 >= BOARD_HEIGHT || tetrominoWillCollide(xPos, yPos, currentTetromino, "down")) {
-                    // new active tile
+                    // new active tetromino
+                    currentTetromino = Utils.randomTetromino(2);
                     xPos = Utils.random(1, 7);
                     yPos = -1;
                 }
@@ -160,6 +161,25 @@ class Board extends JPanel implements KeyListener {
             return getTile(x + 2 + right, y + down) != DEFAULT_TILE_COLOR;
         }
 
+        if (tetromino == 'J') {
+            if (x - 1 - left < 0) return true;
+            if (x + 1 + right >= BOARD_WIDTH) return true;
+            if (getTile(x, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (y > 0 && (left == 1 || right == 1) && getTile(x - 1 - left + right, y - 1) != DEFAULT_TILE_COLOR)
+                return true;
+            return getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR;
+        }
+
+        if (tetromino == 'O') {
+            if (x - left < 0) return true;
+            if (x + 1 + right >= BOARD_WIDTH) return true;
+            if (getTile(x - left, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
+            if (y > 0 && (left == 1) && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR) return true;
+            if (y > 0 && (right == 1) && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR) return true;
+        }
+
         /* TODO */
 
         return false;
@@ -180,13 +200,13 @@ class Board extends JPanel implements KeyListener {
         }
         if (e.getKeyChar() == 'a' || e.getKeyChar() == 'ф') {
             fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tetromino
-            if (xPos > 0 && !tetrominoWillCollide(xPos, yPos, currentTetromino, "left")) // is aside from wall and other tetrominos
+            if (!tetrominoWillCollide(xPos, yPos, currentTetromino, "left")) // is aside from wall and other tetrominos
                 xPos--; // decrement x position
             fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tetromino
         }
         if (e.getKeyChar() == 'd' || e.getKeyChar() == 'в') {
             fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tetromino
-            if (xPos < BOARD_WIDTH - 1 && !tetrominoWillCollide(xPos, yPos, currentTetromino, "right")) //  is aside from wall and other tetrominos
+            if (!tetrominoWillCollide(xPos, yPos, currentTetromino, "right")) //  is aside from wall and other tetrominos
                 xPos++; // increment x position
             fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tetromino
         }
@@ -215,8 +235,14 @@ class Utils {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    public static char randomTetromino() {
-        final char[] tetrominos = {'I', 'J', 'L', 'O', 'S', 'T', 'Z'};
-        return tetrominos[random(0, 6)];
+    public static char randomTetromino(int max) {
+        final char[] tetrominos = {'I', 'J', 'O', 'L', 'S', 'T', 'Z'};
+        return tetrominos[random(0, max)];
+    }
+
+    public static Color randomColor() {
+        // TODO
+        final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE};
+        return colors[random(0, 2)];
     }
 }
