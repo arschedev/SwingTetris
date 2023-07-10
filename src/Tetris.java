@@ -158,7 +158,6 @@ class Board extends JPanel implements KeyListener {
              */
             fillTile(x, y, color); // @
             fillTile(x - 1, y, color); // 1
-            /* (y > 0) is for not going out of bounds */
             if (y > 0) fillTile(x - 1, y - 1, color); // 2
             fillTile(x + 1, y, color); // 3
         }
@@ -175,20 +174,19 @@ class Board extends JPanel implements KeyListener {
             fillTile(x, y + 1, color); // 3
         }
 
-        // TODO
         if (tetromino == 'J' && rotation == 2) {
-            fillTile(x, y, color);
             fillTile(x, y - 1, color);
+            fillTile(x - 1, y - 1, color); // 1
             fillTile(x + 1, y - 1, color);
-            fillTile(x, y + 1, color);
+            fillTile(x + 1, y, color); // 3
         }
 
         // TODO
         if (tetromino == 'J' && rotation == 3) {
+            fillTile(x, y, color); // @
             fillTile(x, y, color);
-            fillTile(x, y - 1, color);
-            fillTile(x + 1, y - 1, color);
-            fillTile(x, y + 1, color);
+            fillTile(x, y, color); // 2
+            fillTile(x, y, color);
         }
 
         /* L */
