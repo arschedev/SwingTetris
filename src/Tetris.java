@@ -38,7 +38,8 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private Color ACTIVE_TILE_COLOR = Utils.randomColor();
-    private char currentTetromino = Utils.randomTetromino();
+    private char currentTetromino = 'I';
+    private int currentRotation = 0;
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
 
@@ -81,24 +82,25 @@ class Board extends JPanel implements KeyListener {
             @Override
             public void run() {
                 // reached limits of floor or other tetrominos
-                if (yPos + 1 >= BOARD_HEIGHT || tetrominoWillCollide(xPos, yPos, currentTetromino, "down")) {
+                if (yPos + 1 >= BOARD_HEIGHT || tetrominoWillCollide(xPos, yPos, currentTetromino, "down", currentRotation)) {
                     // clear filled lines
                     clearLines();
 
                     // new active tetromino
                     ACTIVE_TILE_COLOR = Utils.randomColor();
-                    currentTetromino = Utils.randomTetromino();
+                    currentTetromino = 'I';
+                    currentRotation = 0;
                     xPos = Utils.random(1, 7);
                     yPos = -1;
                 }
 
                 yPos++; // increment y position
                 if (yPos > 0)
-                    fillTetromino(xPos, yPos - 1, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tetromino
-                fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tetromino
+                    fillTetromino(xPos, yPos - 1, DEFAULT_TILE_COLOR, currentTetromino, currentRotation); // remove previous tetromino
+                fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino, currentRotation); // fill current tetromino
                 repaint(); // Redrawing the board
             }
-        }, 0, 1000);
+        }, 0, 500);
     }
 
     private void clearLines() {
@@ -127,13 +129,24 @@ class Board extends JPanel implements KeyListener {
         }
     }
 
-    private void fillTetromino(int x, int y, Color color, char tetromino) {
-        if (tetromino == 'I') {
+    private void fillTetromino(int x, int y, Color color, char tetromino, int rotation) {
+        /* I */
+
+        if (tetromino == 'I' && (rotation == 0 || rotation == 2)) {
             fillTile(x, y, color);
             fillTile(x - 1, y, color);
             fillTile(x + 1, y, color);
             fillTile(x + 2, y, color);
         }
+
+        if (tetromino == 'I' && (rotation == 1 || rotation == 3)) {
+            fillTile(x, y, color);
+            fillTile(x, y - 1, color);
+            fillTile(x, y + 1, color);
+            fillTile(x, y + 2, color);
+        }
+
+        /* J */
 
         if (tetromino == 'J') {
             fillTile(x, y, color);
@@ -142,12 +155,16 @@ class Board extends JPanel implements KeyListener {
             fillTile(x + 1, y, color);
         }
 
+        /* L */
+
         if (tetromino == 'L') {
             fillTile(x, y, color);
             fillTile(x - 1, y, color);
             fillTile(x + 1, y, color);
             if (y > 0) fillTile(x + 1, y - 1, color);
         }
+
+        /* O */
 
         if (tetromino == 'O') {
             fillTile(x, y, color);
@@ -156,6 +173,8 @@ class Board extends JPanel implements KeyListener {
             if (y > 0) fillTile(x + 1, y - 1, color);
         }
 
+        /* S */
+
         if (tetromino == 'S') {
             fillTile(x, y, color);
             fillTile(x - 1, y, color);
@@ -163,12 +182,16 @@ class Board extends JPanel implements KeyListener {
             if (y > 0) fillTile(x + 1, y - 1, color);
         }
 
+        /* T */
+
         if (tetromino == 'T') {
             fillTile(x, y, color);
             fillTile(x - 1, y, color);
             fillTile(x + 1, y, color);
             if (y > 0) fillTile(x, y - 1, color);
         }
+
+        /* Z */
 
         if (tetromino == 'Z') {
             fillTile(x, y, color);
@@ -178,13 +201,15 @@ class Board extends JPanel implements KeyListener {
         }
     }
 
-    private Boolean tetrominoWillCollide(int x, int y, char tetromino, String direction) {
+    private Boolean tetrominoWillCollide(int x, int y, char tetromino, String direction, int rotation) {
         int down = 0, left = 0, right = 0;
         if (direction.equals("down")) down = 1;
         if (direction.equals("left")) left = 1;
         if (direction.equals("right")) right = 1;
 
-        if (tetromino == 'I') {
+        /* I */
+
+        if (tetromino == 'I' && (rotation == 0 || rotation == 2)) {
             if (x - 1 - left < 0) return true;
             if (x + 2 + right >= BOARD_WIDTH) return true;
             if (getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR) return true;
@@ -192,6 +217,19 @@ class Board extends JPanel implements KeyListener {
             if (getTile(x + 1, y + down) != DEFAULT_TILE_COLOR) return true;
             return getTile(x + 2 + right, y + down) != DEFAULT_TILE_COLOR;
         }
+
+        if (tetromino == 'I' && (rotation == 1 || rotation == 3)) {
+            if (x - left < 0) return true;
+            if (x + right >= BOARD_WIDTH) return true;
+            if (y < 1) return true;
+            if (y >= BOARD_HEIGHT - 3) return true;
+            if ((left == 1 || right == 1) && getTile(x - left + right, y) != DEFAULT_TILE_COLOR) return true;
+            if ((left == 1 || right == 1) && getTile(x - left + right, y - 1) != DEFAULT_TILE_COLOR) return true;
+            if ((left == 1 || right == 1) && getTile(x - left + right, y + 1) != DEFAULT_TILE_COLOR) return true;
+            return getTile(x - left + right, y + 2 + down) != DEFAULT_TILE_COLOR;
+        }
+
+        /* J */
 
         if (tetromino == 'J') {
             if (x - 1 - left < 0) return true;
@@ -202,6 +240,8 @@ class Board extends JPanel implements KeyListener {
             return y > 0 && (left == 1 || right == 1) && getTile(x - 1 - left + right, y - 1) != DEFAULT_TILE_COLOR;
         }
 
+        /* L */
+
         if (tetromino == 'L') {
             if (x - 1 - left < 0) return true;
             if (x + 1 + right >= BOARD_WIDTH) return true;
@@ -210,6 +250,8 @@ class Board extends JPanel implements KeyListener {
             if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
             return y > 0 && (left == 1 || right == 1) && getTile(x + 1 - left + right, y - 1) != DEFAULT_TILE_COLOR;
         }
+
+        /* O */
 
         if (tetromino == 'O') {
             if (x - left < 0) return true;
@@ -220,6 +262,8 @@ class Board extends JPanel implements KeyListener {
             return y > 0 && (right == 1) && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR;
         }
 
+        /* S */
+
         if (tetromino == 'S') {
             if (x - 1 - left < 0) return true;
             if (x + 1 + right >= BOARD_WIDTH) return true;
@@ -229,6 +273,8 @@ class Board extends JPanel implements KeyListener {
             return y > 0 && (right == 1) && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR;
         }
 
+        /* T */
+
         if (tetromino == 'T') {
             if (x - 1 - left < 0) return true;
             if (x + 1 + right >= BOARD_WIDTH) return true;
@@ -237,6 +283,8 @@ class Board extends JPanel implements KeyListener {
             if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
             return y > 0 && (left == 1 || right == 1) && getTile(x - left + right, y - 1) != DEFAULT_TILE_COLOR;
         }
+
+        /* Z */
 
         if (tetromino == 'Z') {
             if (x - 1 - left < 0) return true;
@@ -260,29 +308,47 @@ class Board extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        // play
         if (e.getKeyChar() == 'p' || e.getKeyChar() == 'з') {
             init();
         }
 
+        // left
         if (e.getKeyChar() == 'a' || e.getKeyChar() == 'ф') {
-            fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tetromino
-            if (!tetrominoWillCollide(xPos, yPos, currentTetromino, "left")) // is aside from wall and other tetrominos
+            fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino, currentRotation); // remove previous tetromino
+            if (!tetrominoWillCollide(xPos, yPos, currentTetromino, "left", currentRotation)) // is aside from wall and other tetrominos
                 xPos--; // decrement x position
-            fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tetromino
+            fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino, currentRotation); // fill current tetromino
         }
 
+        // right
         if (e.getKeyChar() == 'd' || e.getKeyChar() == 'в') {
-            fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tetromino
-            if (!tetrominoWillCollide(xPos, yPos, currentTetromino, "right")) //  is aside from wall and other tetrominos
+            fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino, currentRotation); // remove previous tetromino
+            if (!tetrominoWillCollide(xPos, yPos, currentTetromino, "right", currentRotation)) //  is aside from wall and other tetrominos
                 xPos++; // increment x position
-            fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tetromino
+            fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino, currentRotation); // fill current tetromino
         }
 
+        // down
         if (e.getKeyChar() == 's' || e.getKeyChar() == 'ы' || e.getKeyChar() == 'і') {
-            fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino); // remove previous tetromino
-            if (yPos < BOARD_HEIGHT - 1 && !tetrominoWillCollide(xPos, yPos, currentTetromino, "down")) // is above floor level and other tetrominos
+            fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino, currentRotation); // remove previous tetromino
+            if (yPos < BOARD_HEIGHT - 1 && !tetrominoWillCollide(xPos, yPos, currentTetromino, "down", currentRotation)) // is above floor level and other tetrominos
                 yPos++; // increment y position
-            fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino); // fill current tetromino
+            fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino, currentRotation); // fill current tetromino
+        }
+
+        // rotate
+        if (e.getKeyChar() == ' ') {
+            fillTetromino(xPos, yPos, DEFAULT_TILE_COLOR, currentTetromino, currentRotation); // remove previous tetromino
+
+            int testRotation = currentRotation + 1;
+            if (testRotation > 3) testRotation = 0;
+
+            if (!tetrominoWillCollide(xPos, yPos, currentTetromino, "down", testRotation)) {
+                currentRotation = testRotation;
+            }
+
+            fillTetromino(xPos, yPos, ACTIVE_TILE_COLOR, currentTetromino, currentRotation); // fill current tetromino
         }
 
         repaint(); // Redrawing the board
@@ -307,6 +373,11 @@ class Utils {
     public static char randomTetromino() {
         final char[] tetrominos = {'I', 'J', 'L', 'O', 'S', 'T', 'Z'};
         return tetrominos[random(0, tetrominos.length - 1)];
+    }
+
+    public static char randomTetromino(int max) {
+        final char[] tetrominos = {'I', 'J', 'L', 'O', 'S', 'T', 'Z'};
+        return tetrominos[random(0, max - 1)];
     }
 
     public static Color randomColor() {
