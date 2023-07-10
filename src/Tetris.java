@@ -38,7 +38,7 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private Color ACTIVE_TILE_COLOR = Utils.randomColor();
-    private char currentTetromino = 'O';
+    private char currentTetromino = Utils.randomTetromino();
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
 
@@ -87,7 +87,7 @@ class Board extends JPanel implements KeyListener {
 
                     // new active tetromino
                     ACTIVE_TILE_COLOR = Utils.randomColor();
-                    currentTetromino = 'O';
+                    currentTetromino = Utils.randomTetromino();
                     xPos = Utils.random(1, 7);
                     yPos = -1;
                 }
@@ -113,9 +113,8 @@ class Board extends JPanel implements KeyListener {
             }
 
             if (isLineFilled) {
-                // FIXME
-                boardGrid = Utils.removeLastElementFromColor2D(boardGrid);
-                boardGrid = Utils.prependArrayToColor2D(boardGrid, new Color[BOARD_WIDTH]);
+                boardGrid = Utils.removeColorArrayFromColor2D(boardGrid, row);
+                boardGrid = Utils.prependColorArrayToColor2D(boardGrid, new Color[BOARD_WIDTH]);
                 fillLine(0, DEFAULT_TILE_COLOR);
                 row++;
             }
@@ -315,19 +314,36 @@ class Utils {
         return colors[random(0, colors.length - 1)];
     }
 
-    public static Color[][] removeLastElementFromColor2D(Color[][] originalArray) {
-        return Arrays.copyOf(originalArray, originalArray.length - 1);
+    public static Color[][] removeColorArrayFromColor2D(Color[][] originalColor2D, int index) {
+        int rowsNumber = originalColor2D.length;
+        int colsNumber = originalColor2D[0].length;
+
+        Color[][] color2D = Arrays.copyOf(originalColor2D, originalColor2D.length);
+        color2D[index] = null;
+
+        Color[][] result = new Color[rowsNumber - 1][colsNumber];
+
+        int n = 0;
+        for (int row = 0; row < color2D.length; row++) {
+            if (color2D[row] != null) {
+                result[row - n] = color2D[row];
+            } else {
+                n = 1;
+            }
+        }
+
+        return result;
     }
 
-    public static Color[][] prependArrayToColor2D(Color[][] originalArray, Color[] newArray) {
-        int rowsNum = originalArray.length;
-        int colsNum = originalArray[0].length;
-        int newRowsNum = originalArray.length + 1;
+    public static Color[][] prependColorArrayToColor2D(Color[][] originalColor2D, Color[] colorArray) {
+        int rowsNumber = originalColor2D.length;
+        int colsNumber = originalColor2D[0].length;
+        int newRowsNumber = originalColor2D.length + 1;
 
-        Color[][] resultArray = new Color[newRowsNum][colsNum];
-        resultArray[0] = Arrays.copyOf(newArray, colsNum);
-        System.arraycopy(originalArray, 0, resultArray, 1, rowsNum);
+        Color[][] result = new Color[newRowsNumber][colsNumber];
+        result[0] = Arrays.copyOf(colorArray, colsNumber);
+        System.arraycopy(originalColor2D, 0, result, 1, rowsNumber);
 
-        return resultArray;
+        return result;
     }
 }
