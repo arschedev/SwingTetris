@@ -175,18 +175,25 @@ class Board extends JPanel implements KeyListener {
         }
 
         if (tetromino == 'J' && rotation == 2) {
-            fillTile(x, y - 1, color);
-            fillTile(x - 1, y - 1, color); // 1
-            fillTile(x + 1, y - 1, color);
-            fillTile(x + 1, y, color); // 3
+            /**
+             *  rotation center
+             *        v
+             *
+             *      3 @ 1
+             *          2
+             */
+            fillTile(x, y, color); // @
+            fillTile(x + 1, y, color); // 1
+            fillTile(x + 1, y + 1, color); // 2
+            fillTile(x - 1, y, color); // 3
         }
 
         // TODO
         if (tetromino == 'J' && rotation == 3) {
             fillTile(x, y, color); // @
-            fillTile(x, y, color);
-            fillTile(x, y, color); // 2
-            fillTile(x, y, color);
+            fillTile(x + 1, y, color); // 1
+            fillTile(x + 1, y + 1, color); // 2
+            fillTile(x - 1, y, color); // 3
         }
 
         /* L */
@@ -200,7 +207,11 @@ class Board extends JPanel implements KeyListener {
 
         /* O */
 
-        if (tetromino == 'O') {
+        if (tetromino == 'O' && (rotation == 0 || rotation == 1 || rotation == 2 || rotation == 3)) {
+            /**
+             *      2 3
+             *      @ 1
+             */
             fillTile(x, y, color);
             fillTile(x + 1, y, color);
             if (y > 0) fillTile(x, y - 1, color);
@@ -274,7 +285,7 @@ class Board extends JPanel implements KeyListener {
             return y > 0 && (left == 1 || right == 1) && getTile(x - 1 - left + right, y - 1) != DEFAULT_TILE_COLOR;
         }
 
-        if (tetromino == 'J' && (rotation == 1 || rotation == 2 || rotation == 3)) {
+        if (tetromino == 'J' && (rotation == 1)) {
             /**
              *      1 2
              *      @       - rotation center
@@ -301,7 +312,25 @@ class Board extends JPanel implements KeyListener {
             /* block 3 hits other blocks on the left / right / bottom? */
         }
 
-        // TODO rotation 2
+        if (tetromino == 'J' && (rotation == 2 || rotation == 3)) {
+            /**
+             *  rotation center
+             *        v
+             *
+             *      3 @ 1
+             *          2
+             */
+            if (x - 1 - left < 0) return true; // hits left wall?
+            if (x + 1 + right >= BOARD_WIDTH) return true; // hits right wall?
+            if (y >= BOARD_HEIGHT - 2) return true;
+            if (getTile(x, y + down) != DEFAULT_TILE_COLOR) return true; // block @ hits other block on the bottom?
+            if (right == 1 && getTile(x + 1 + right, y) != DEFAULT_TILE_COLOR)
+                return true; // block 1 hits other block on the right?
+            if (getTile(x + 1 - left + right, y + 1 + down) != DEFAULT_TILE_COLOR)
+                return true; // block 2 hits other blocks on the left / right / bottom?
+            return getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR; // block 3 hits other blocks on the left / bottom?
+        }
+
         // TODO rotation 3
 
         /* L */
