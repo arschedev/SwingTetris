@@ -196,9 +196,9 @@ class Board extends JPanel implements KeyListener {
          */
         if (tetromino == 'J' && rotation == 3) {
             fillTile(x, y, color); // @
-            fillTile(x + 1, y, color); // 1
-            fillTile(x + 1, y + 1, color); // 2
-            fillTile(x - 1, y, color); // 3
+            fillTile(x, y - 1, color); // 1
+            fillTile(x, y + 1, color); // 2
+            fillTile(x - 1, y + 1, color); // 3
         }
 
         /* L */
@@ -321,7 +321,7 @@ class Board extends JPanel implements KeyListener {
             /* block 3 hits other blocks on the left / right / bottom? */
         }
 
-        if (tetromino == 'J' && (rotation == 2 || rotation == 3)) {
+        if (tetromino == 'J' && (rotation == 2 )) {
             /**
              *  rotation center
              *        v
@@ -337,10 +337,25 @@ class Board extends JPanel implements KeyListener {
                 return true; // block 1 hits other block on the right?
             if (getTile(x + 1 - left + right, y + 1 + down) != DEFAULT_TILE_COLOR)
                 return true; // block 2 hits other blocks on the left / right / bottom?
-            return getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR; // block 3 hits other blocks on the left / bottom?
         }
 
-        // TODO rotation 3
+        if (tetromino == 'J' && (rotation == 3)) {
+            /**
+             *  rotation center
+             *        v
+             *
+             *      3
+             *      @
+             *   2  1
+             */
+            if (x + right >= BOARD_WIDTH) return true; // hits left wall?
+            if (y >= BOARD_HEIGHT - 2) return true; // hits right wall?
+            if (y >= BOARD_HEIGHT - 3) return true;
+            if (((left == 1 || right == 1) && getTile(x - left + right) != DEFAULT_TILE_COLOR)) return true; // block @ hits other block on the bottom?
+            if (getTile(x - 1, y) != DEFAULT_TILE_COLOR) return true; // block 1 hits other block on the left?
+            if (getTile(x, y - 1) != DEFAULT_TILE_COLOR) return true; // block 2 hits other block on the top?
+        }
+
 
         /* L */
 
