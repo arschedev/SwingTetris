@@ -351,7 +351,7 @@ class Board extends JPanel implements KeyListener {
             if (x + right >= BOARD_WIDTH) return true; // hits left wall?
             if (y >= BOARD_HEIGHT - 2) return true; // hits right wall?
             if (y >= BOARD_HEIGHT - 3) return true;
-            if (((left == 1 || right == 1) && getTile(x - left + right) != DEFAULT_TILE_COLOR)) return true; // block @ hits other block on the bottom?
+            if (((left == 1 || right == 1) && getTile(x - left + right) != DEFAULT_TILE_COLOR)) return true; // I know that we have problem here but idk how to patch this sht :(
             if (getTile(x - 1, y) != DEFAULT_TILE_COLOR) return true; // block 1 hits other block on the left?
             if (getTile(x, y - 1) != DEFAULT_TILE_COLOR) return true; // block 2 hits other block on the top?
         }
