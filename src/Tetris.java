@@ -89,10 +89,16 @@ class Board extends JPanel implements KeyListener {
                     // clear filled lines
                     clearLines();
 
-                    // Game Over
+                    // You won!
                     if (isBoardCleared()) {
                         repaint();
                         JOptionPane.showMessageDialog(frame, "You won!", "Congratulations", JOptionPane.INFORMATION_MESSAGE);
+                        System.exit(0);
+                    }
+
+                    // You lost!
+                    if (yPos < 2) {
+                        JOptionPane.showMessageDialog(frame, "You lost!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
                         System.exit(0);
                     }
 
