@@ -40,7 +40,7 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private Color ACTIVE_TILE_COLOR = Utils.randomColor();
-    private char currentTetromino = 'O';
+    private char currentTetromino = 'Z';
     private int currentRotation = 0;
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
@@ -104,7 +104,7 @@ class Board extends JPanel implements KeyListener {
 
                     // new active tetromino
                     ACTIVE_TILE_COLOR = Utils.randomColor();
-                    currentTetromino = 'O';
+                    currentTetromino = 'Z';
                     currentRotation = 0;
                     xPos = Utils.random(1, 7);
                     yPos = -1;
@@ -216,7 +216,6 @@ class Board extends JPanel implements KeyListener {
             fillTile(x - 1, y, color); // 3
         }
 
-        // TODO
         /**
          *        1
          *        @
@@ -257,29 +256,93 @@ class Board extends JPanel implements KeyListener {
 
         /* S */
 
-        if (tetromino == 'S') {
-            fillTile(x, y, color);
+        if (tetromino == 'S' && (rotation == 0)) {
+            fillTile(x, y, color); // To check them, you can simply @ make darker by .darker and check where the frick is center
             fillTile(x - 1, y, color);
             if (y > 0) fillTile(x, y - 1, color);
             if (y > 0) fillTile(x + 1, y - 1, color);
         }
 
+        if (tetromino == 'S' && (rotation == 1)) {
+            fillTile(x, y, color);
+            fillTile(x, y - 1, color); // 1
+            if (y > 0) fillTile(x + 1, y, color); // 2
+            if (y > 0) fillTile(x + 1, y + 1, color); // 3
+        }
+
+        if (tetromino == 'S' && (rotation == 2)) {
+            fillTile(x, y, color);
+            fillTile(x + 1, y, color);
+            if (y > 0) fillTile(x, y + 1, color);
+            if (y > 0) fillTile(x - 1, y + 1, color);
+        }
+
+        if (tetromino == 'S' && (rotation == 3)) {
+            fillTile(x, y, color);
+            fillTile(x, y + 1, color);
+            if (y > 0) fillTile(x - 1, y, color);
+            if (y > 0) fillTile(x - 1, y - 1, color);
+        }
+
         /* T */
 
-        if (tetromino == 'T') {
+        if (tetromino == 'T' && (rotation == 0)) {
             fillTile(x, y, color);
             fillTile(x - 1, y, color);
             fillTile(x + 1, y, color);
             if (y > 0) fillTile(x, y - 1, color);
         }
 
+
+        if (tetromino == 'T' && (rotation == 1)) {
+            fillTile(x, y, color);
+            fillTile(x, y - 1, color);
+            fillTile(x, y + 1, color);
+            if (y > 0) fillTile(x + 1, y, color);
+        }
+
+        if (tetromino == 'T' && (rotation == 2)) {
+            fillTile(x, y, color);
+            fillTile(x + 1, y, color);
+            fillTile(x - 1, y, color);
+            if (y > 0) fillTile(x, y + 1, color);
+        }
+
+        if (tetromino == 'T' && (rotation == 3)) {
+            fillTile(x, y, color);
+            fillTile(x, y + 1, color);
+            fillTile(x, y - 1, color);
+            if (y > 0) fillTile(x - 1, y, color);
+        }
+
         /* Z */
 
-        if (tetromino == 'Z') {
+        if (tetromino == 'Z' && (rotation == 0)) {
             fillTile(x, y, color);
             fillTile(x + 1, y, color);
             if (y > 0) fillTile(x, y - 1, color);
             if (y > 0) fillTile(x - 1, y - 1, color);
+        }
+
+        if (tetromino == 'Z' && (rotation == 1)) {
+            fillTile(x, y, color.darker());
+            fillTile(x, y + 1, color);
+            if (y > 0) fillTile(x + 1, y, color);
+            if (y > 0) fillTile(x + 1, y - 1, color);
+        }
+
+        if (tetromino == 'Z' && (rotation == 2)) {
+            fillTile(x, y, color.darker());
+            fillTile(x - 1, y, color);
+            if (y > 0) fillTile(x, y + 1, color);
+            if (y > 0) fillTile(x + 1, y + 1, color);
+        }
+
+        if (tetromino == 'Z' && (rotation == 3)) {
+            fillTile(x, y, color.darker());
+            fillTile(x, y - 1, color);
+            if (y > 0) fillTile(x - 1, y, color);
+            if (y > 0) fillTile(x - 1, y + 1, color);
         }
     }
 
@@ -323,11 +386,6 @@ class Board extends JPanel implements KeyListener {
         }
 
         if (tetromino == 'J' && (rotation == 1)) {
-            /**
-             *      1 2
-             *      @       - rotation center
-             *      3
-             */
             if (x - left < 0) return true; // hits left wall?
             if (x + 1 + right >= BOARD_WIDTH)
                 return true; // hits right wall? `1` means there is 1 block on the right (marked as 2)
