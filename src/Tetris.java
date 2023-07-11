@@ -31,7 +31,7 @@ public class Tetris extends JFrame {
 }
 
 class Board extends JPanel implements KeyListener {
-    private Container frame;
+    private final Container frame;
     private Boolean hasStarted = false;
     private final int TILE_SIZE = 30;
     private final int BOARD_WIDTH = 10;
@@ -216,12 +216,12 @@ class Board extends JPanel implements KeyListener {
             fillTile(x - 1, y, color); // 3
         }
 
-        /**
-         *        1
-         *        @
-         *      3 2
-         */
         if (tetromino == 'J' && rotation == 3) {
+            /**
+             *        1
+             *        @
+             *      3 2
+             */
             fillTile(x, y, color); // @
             fillTile(x, y - 1, color); // 1
             fillTile(x, y + 1, color); // 2
@@ -229,17 +229,19 @@ class Board extends JPanel implements KeyListener {
         }
 
         /* L */
-        /**
-         *            2
-         *        1 @ 3
-         */
 
         if (tetromino == 'L') {
+            /**
+             *            2
+             *        1 @ 3
+             */
             fillTile(x, y, color);
             fillTile(x - 1, y, color); // 1
             if (y > 0) fillTile(x + 1, y - 1, color); // 2
             fillTile(x + 1, y, color); // 3
         }
+
+        /* TODO */
 
         /* O */
 
@@ -257,7 +259,7 @@ class Board extends JPanel implements KeyListener {
         /* S */
 
         if (tetromino == 'S' && (rotation == 0)) {
-            fillTile(x, y, color); // To check them, you can simply @ make darker by .darker and check where the frick is center
+            fillTile(x, y, color);
             fillTile(x - 1, y, color);
             if (y > 0) fillTile(x, y - 1, color);
             if (y > 0) fillTile(x + 1, y - 1, color);
@@ -292,7 +294,6 @@ class Board extends JPanel implements KeyListener {
             fillTile(x + 1, y, color);
             if (y > 0) fillTile(x, y - 1, color);
         }
-
 
         if (tetromino == 'T' && (rotation == 1)) {
             fillTile(x, y, color);
@@ -393,11 +394,7 @@ class Board extends JPanel implements KeyListener {
             if (y >= BOARD_HEIGHT - 2)
                 return true; // hits floor? `2` means 1 block below center and -1 to get real index
             if ((left == 1 || right == 1) && getTile(x - left + right, y) != DEFAULT_TILE_COLOR)
-                return true; /* block @ hits other blocks on the left / right?
-                `left == 1 || right == 1` is for not letting it check block below,
-                because block below is block 3, which is a part of tetromino,
-                otherwise it will stop, thus breaking the game,
-                because it thinks that block 3 is a part of other tetromino */
+                return true; // block @ hits other blocks on the left / right?
             if (left == 1 && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR)
                 return true; /* block 1 hits other block on the left?
                 `left == 1` -> same thing as before, except here we also can't go right because of block 2 */
