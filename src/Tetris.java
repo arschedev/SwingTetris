@@ -40,7 +40,7 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private Color ACTIVE_TILE_COLOR = Utils.randomColor();
-    private char currentTetromino = 'Z';
+    private char currentTetromino = 'L';
     private int currentRotation = 0;
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
@@ -104,7 +104,7 @@ class Board extends JPanel implements KeyListener {
 
                     // new active tetromino
                     ACTIVE_TILE_COLOR = Utils.randomColor();
-                    currentTetromino = 'Z';
+                    currentTetromino = 'L';
                     currentRotation = 0;
                     xPos = Utils.random(1, 7);
                     yPos = -1;
@@ -230,18 +230,30 @@ class Board extends JPanel implements KeyListener {
 
         /* L */
 
-        if (tetromino == 'L') {
-            /**
-             *            2
-             *        1 @ 3
-             */
+        if (tetromino == 'L' && rotation == 0) {
             fillTile(x, y, color);
             fillTile(x - 1, y, color); // 1
             if (y > 0) fillTile(x + 1, y - 1, color); // 2
             fillTile(x + 1, y, color); // 3
         }
-
-        /* TODO */
+        if (tetromino == 'L'&& rotation == 1) {
+            fillTile(x, y, color);
+            fillTile(x, y - 1, color); // 1
+            if (y > 0) fillTile(x + 1, y + 1, color); // 2
+            fillTile(x, y + 1, color); // 3
+        }
+        if (tetromino == 'L' && rotation == 2) {
+            fillTile(x, y, color);
+            fillTile(x + 1, y, color); // 1
+            if (y > 0) fillTile(x - 1, y + 1, color); // 2
+            fillTile(x - 1, y, color); // 3
+        }
+        if (tetromino == 'L' && rotation == 3) {
+            fillTile(x, y, color);
+            fillTile(x, y + 1, color); // 1
+            if (y > 0) fillTile(x - 1, y - 1, color); // 2
+            fillTile(x, y - 1, color); // 3
+        }
 
         /* O */
 
