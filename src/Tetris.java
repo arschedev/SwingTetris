@@ -40,7 +40,7 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private Color ACTIVE_TILE_COLOR = Utils.randomColor();
-    private char currentTetromino = 'L';
+    private char currentTetromino = 'J';
     private int currentRotation = 0;
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
@@ -104,7 +104,7 @@ class Board extends JPanel implements KeyListener {
 
                     // new active tetromino
                     ACTIVE_TILE_COLOR = Utils.randomColor();
-                    currentTetromino = 'L';
+                    currentTetromino = 'J';
                     currentRotation = 0;
                     xPos = Utils.random(1, 7);
                     yPos = -1;
@@ -236,7 +236,7 @@ class Board extends JPanel implements KeyListener {
             if (y > 0) fillTile(x + 1, y - 1, color); // 2
             fillTile(x + 1, y, color); // 3
         }
-        if (tetromino == 'L'&& rotation == 1) {
+        if (tetromino == 'L' && rotation == 1) {
             fillTile(x, y, color);
             fillTile(x, y - 1, color); // 1
             if (y > 0) fillTile(x + 1, y + 1, color); // 2
@@ -399,21 +399,25 @@ class Board extends JPanel implements KeyListener {
         }
 
         if (tetromino == 'J' && (rotation == 1)) {
+            /**
+             *      1 2
+             *      @       - rotation center
+             *      3
+             */
             if (x - left < 0) return true; // hits left wall?
             if (x + 1 + right >= BOARD_WIDTH)
-                return true; // hits right wall? `1` means there is 1 block on the right (marked as 2)
+                return true; // hits right wall? `1` means there is 1 block on the right (block 2)
             if (y < 1) return true; // `1` means 1 block above center
             if (y >= BOARD_HEIGHT - 2)
-                return true; // hits floor? `2` means 1 block below center and -1 to get real index
+                return true; // hits floor? `2` means 1 block below center and -1 to get index
             if ((left == 1 || right == 1) && getTile(x - left + right, y) != DEFAULT_TILE_COLOR)
                 return true; // block @ hits other blocks on the left / right?
             if (left == 1 && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR)
-                return true; /* block 1 hits other block on the left?
-                `left == 1` -> same thing as before, except here we also can't go right because of block 2 */
+                return true; // block 1 hits other block on the left?
             if (getTile(x + 1 + right, y - 1 + down) != DEFAULT_TILE_COLOR)
                 return true; // block 2 hits other blocks on the right / bottom?
             return getTile(x - left + right, y + 1 + down) != DEFAULT_TILE_COLOR;
-            /* block 3 hits other blocks on the left / right / bottom? */
+            // block 3 hits other blocks on the left / right / bottom?
         }
 
         if (tetromino == 'J' && (rotation == 2)) {
@@ -426,7 +430,7 @@ class Board extends JPanel implements KeyListener {
              */
             if (x - 1 - left < 0) return true; // hits left wall?
             if (x + 1 + right >= BOARD_WIDTH) return true; // hits right wall?
-            if (y >= BOARD_HEIGHT - 2) return true;
+            if (y >= BOARD_HEIGHT - 2) return true; // hits floor?
             if (getTile(x, y + down) != DEFAULT_TILE_COLOR) return true; // block @ hits other block on the bottom?
             if (right == 1 && getTile(x + 1 + right, y) != DEFAULT_TILE_COLOR)
                 return true; // block 1 hits other block on the right?
@@ -434,18 +438,23 @@ class Board extends JPanel implements KeyListener {
                 return true; // block 2 hits other blocks on the left / right / bottom?
         }
 
-        // FIXME
         if (tetromino == 'J' && (rotation == 3)) {
             /**
              *        3
              *        @
              *      2 1
              */
-            if (x + right >= BOARD_WIDTH) return true; // hits left wall?
-            if (y >= BOARD_HEIGHT - 2) return true; // hits right wall?
-            if (((left == 1 || right == 1) && getTile(x - left + right, y) != DEFAULT_TILE_COLOR)) return true;
-            if (getTile(x - 1, y) != DEFAULT_TILE_COLOR) return true; // block 1 hits other block on the left?
-            if (getTile(x, y - 1) != DEFAULT_TILE_COLOR) return true; // block 2 hits other block on the top?
+            if (x - 1 - left < 0) return true; // hits left wall?
+            if (x + right >= BOARD_WIDTH) return true; // hits right wall?
+            if (y >= BOARD_HEIGHT - 2) return true; // hits floor?
+            if ((left == 1 || right == 1) && getTile(x - left + right, y) != DEFAULT_TILE_COLOR)
+                return true; // block @ hits other blocks on the left / right?
+            if (getTile(x + right, y + 1 + down) != DEFAULT_TILE_COLOR)
+                return true; // block 1 hits other block on the left / bottom?
+            if (getTile(x - left, y + 1 + down) != DEFAULT_TILE_COLOR)
+                return true; // block 2 hits other blocks on the left / bottom?
+            if ((left == 1 || right == 1) && getTile(x - left + right, y - 1) != DEFAULT_TILE_COLOR)
+                return true; // block 3 hits other blocks on the left / right?
         }
 
 
@@ -566,12 +575,10 @@ class Board extends JPanel implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO
     }
 }
 
