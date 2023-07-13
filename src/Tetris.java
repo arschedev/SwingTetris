@@ -40,7 +40,7 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private Color ACTIVE_TILE_COLOR = Utils.randomColor();
-    private char currentTetromino = 'Z';
+    private char currentTetromino = Utils.randomTetromino();
     private int currentRotation = 0;
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
@@ -104,7 +104,7 @@ class Board extends JPanel implements KeyListener {
 
                     // new active tetromino
                     ACTIVE_TILE_COLOR = Utils.randomColor();
-                    currentTetromino = 'Z';
+                    currentTetromino = Utils.randomTetromino();
                     currentRotation = 0;
                     xPos = Utils.random(1, 7);
                     yPos = -1;
@@ -369,7 +369,6 @@ class Board extends JPanel implements KeyListener {
             /**
              *      3 2
              *        @ 1
-             *
              */
             fillTile(x, y, color);
             fillTile(x + 1, y, color);
@@ -685,12 +684,16 @@ class Board extends JPanel implements KeyListener {
         /* Z */
 
         if (tetromino == 'Z' && (rotation == 0 || rotation == 2)) {
+            /**
+             *      3 2
+             *        @ 1
+             */
             if (x - 1 - left < 0) return true;
             if (x + 1 + right >= BOARD_WIDTH) return true;
-            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
-            if (getTile(x - left, y + down) != DEFAULT_TILE_COLOR) return true;
-            if (y > 0 && (left == 1) && getTile(x - 1 - left, y - 1) != DEFAULT_TILE_COLOR) return true;
-            return y > 0 && (right == 1) && getTile(x + right, y - 1) != DEFAULT_TILE_COLOR;
+            if (getTile(x - left, y + down) != DEFAULT_TILE_COLOR) return true; // @
+            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true; // 1
+            if (y > 0 && (right == 1) && getTile(x + right, y - 1) != DEFAULT_TILE_COLOR) return true; // 2
+            if (y > 0 && getTile(x - 1 - left, y - 1 + down) != DEFAULT_TILE_COLOR) return true; // 3
         }
 
         if (tetromino == 'Z' && (rotation == 1 || rotation == 3)) {
