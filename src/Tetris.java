@@ -40,7 +40,7 @@ class Board extends JPanel implements KeyListener {
     private final Color DEFAULT_BORDER_COLOR = Color.WHITE;
     private final Color DEFAULT_TILE_COLOR = Color.BLACK;
     private Color ACTIVE_TILE_COLOR = Utils.randomColor();
-    private char currentTetromino = 'T';
+    private char currentTetromino = 'Z';
     private int currentRotation = 0;
     private int xPos = Utils.random(1, 7);
     private int yPos = -1;
@@ -104,7 +104,7 @@ class Board extends JPanel implements KeyListener {
 
                     // new active tetromino
                     ACTIVE_TILE_COLOR = Utils.randomColor();
-                    currentTetromino = 'T';
+                    currentTetromino = 'Z';
                     currentRotation = 0;
                     xPos = Utils.random(1, 7);
                     yPos = -1;
@@ -337,7 +337,7 @@ class Board extends JPanel implements KeyListener {
             fillTile(x, y, color); // @
             fillTile(x, y - 1, color); // 1
             fillTile(x, y + 1, color); // 2
-            if (y > 0) fillTile(x + 1, y, color); // 3
+            fillTile(x + 1, y, color); // 3
         }
 
         if (tetromino == 'T' && (rotation == 2)) {
@@ -348,7 +348,7 @@ class Board extends JPanel implements KeyListener {
             fillTile(x, y, color); // @
             fillTile(x + 1, y, color); // 1
             fillTile(x - 1, y, color); // 2
-            if (y > 0) fillTile(x, y + 1, color); // 3
+            fillTile(x, y + 1, color); // 3
         }
 
         if (tetromino == 'T' && (rotation == 3)) {
@@ -360,7 +360,7 @@ class Board extends JPanel implements KeyListener {
             fillTile(x, y, color); // @
             fillTile(x, y + 1, color); // 1
             fillTile(x, y - 1, color); // 2
-            if (y > 0) fillTile(x - 1, y, color); // 3
+            fillTile(x - 1, y, color); // 3
         }
 
         /* Z */
@@ -385,8 +385,8 @@ class Board extends JPanel implements KeyListener {
              */
             fillTile(x, y, color);
             fillTile(x, y + 1, color);
-            if (y > 0) fillTile(x + 1, y, color);
-            if (y > 0) fillTile(x + 1, y - 1, color);
+            fillTile(x + 1, y, color);
+            fillTile(x + 1, y - 1, color);
         }
     }
 
@@ -673,24 +673,44 @@ class Board extends JPanel implements KeyListener {
             if (y >= BOARD_HEIGHT - 2) return true; // hits floor?
             if (y < 1) return true; // hits ceiling?
             if (right == 1 && getTile(x + right, y) != DEFAULT_TILE_COLOR)
-                return true; // block @ hits other block on the left?
+                return true; // block @ hits other block on the right?
             if (getTile(x - left + right, y + 1 + down) != DEFAULT_TILE_COLOR)
                 return true; // block 1 hits other blocks on the left / right / bottom?
             if ((left == 1 || right == 1) && getTile(x - left + right, y - 1) != DEFAULT_TILE_COLOR)
                 return true; // block 2 hits other blocks on the left / right?
             if (getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR)
-                return true; // block 3 hits other blocks on the right / bottom?
+                return true; // block 3 hits other blocks on the left / bottom?
         }
 
         /* Z */
 
-        if (tetromino == 'Z' && rotation == 0) {
+        if (tetromino == 'Z' && (rotation == 0 || rotation == 2)) {
             if (x - 1 - left < 0) return true;
             if (x + 1 + right >= BOARD_WIDTH) return true;
             if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR) return true;
             if (getTile(x - left, y + down) != DEFAULT_TILE_COLOR) return true;
             if (y > 0 && (left == 1) && getTile(x - 1 - left, y - 1) != DEFAULT_TILE_COLOR) return true;
             return y > 0 && (right == 1) && getTile(x + right, y - 1) != DEFAULT_TILE_COLOR;
+        }
+
+        if (tetromino == 'Z' && (rotation == 1 || rotation == 3)) {
+            /**
+             *        3
+             *      @ 2
+             *      1
+             */
+            if (x - left < 0) return true; // hits left wall?
+            if (x + 1 + right >= BOARD_WIDTH) return true; // hits right wall?
+            if (y >= BOARD_HEIGHT - 2) return true; // hits floor?
+            if (y < 1) return true; // hits ceiling?
+            if (left == 1 && getTile(x - left, y) != DEFAULT_TILE_COLOR)
+                return true; // block @ hits other block on the left?
+            if (getTile(x - left + right, y + 1 + down) != DEFAULT_TILE_COLOR)
+                return true; // block 1 hits other blocks on the left / right / bottom?
+            if (getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR)
+                return true; // block 2 hits other block on the right / bottom?
+            return (left == 1 || right == 1) && getTile(x + 1 - left + right, y - 1) != DEFAULT_TILE_COLOR;
+            // block 3 hits other blocks on the left / right?
         }
 
         return false;
@@ -770,11 +790,6 @@ class Utils {
     public static char randomTetromino() {
         final char[] tetrominos = {'I', 'J', 'L', 'O', 'S', 'T', 'Z'};
         return tetrominos[random(0, tetrominos.length - 1)];
-    }
-
-    public static char randomTetromino(int max) {
-        final char[] tetrominos = {'I', 'J', 'L', 'O', 'S', 'T', 'Z'};
-        return tetrominos[random(0, max - 1)];
     }
 
     public static Color randomColor() {
