@@ -12,7 +12,7 @@ public class Tetris extends JFrame {
     }
 
     private void init() {
-        setTitle("Tetris (p to start)");
+        setTitle("Tetris (p to start) beta 1.0");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         Board board = new Board(getContentPane());
