@@ -394,10 +394,10 @@ public class Board extends JPanel implements KeyListener {
         if (tetromino == 'J' && rotation == 0) {
             return (x - 1 - left < 0 || // hits left wall?
                     x + 1 + right >= BOARD_WIDTH || // hits right wall?
-                    getTile(x, y + down) != DEFAULT_TILE_COLOR || // block @ hits other block on the bottom?
-                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // block 3 hits other blocks on the left / bottom?
-                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR || // block 2 hits other blocks on the right / bottom?
-                    (y > 0 && (left == 1 || right == 1) && getTile(x - 1 - left + right, y - 1) != DEFAULT_TILE_COLOR)); // block 1 hits other block on the left or right?
+                    getTile(x, y + down) != DEFAULT_TILE_COLOR || // @
+                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // 1
+                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR || // 2
+                    (y > 0 && (left == 1 || right == 1) && getTile(x - 1 - left + right, y - 1) != DEFAULT_TILE_COLOR)); // 3
         }
 
         if (tetromino == 'J' && rotation == 1) {
@@ -459,9 +459,9 @@ public class Board extends JPanel implements KeyListener {
             return (x - 1 - left < 0 || // hits left wall?
                     x + 1 + right >= BOARD_WIDTH || // hits right wall?
                     getTile(x, y + down) != DEFAULT_TILE_COLOR || // block @ hits other block on the bottom?
-                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // block 3 hits other blocks on the left / bottom?
-                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR || // block 2 hits other blocks on the right / bottom?
-                    (y > 0 && (left == 1 || right == 1) && getTile(x + 1 - left + right, y - 1) != DEFAULT_TILE_COLOR)); // block 1 hits other block on the left or right?
+                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // block 1 hits other blocks on the left / bottom?
+                    (y > 0 && (left == 1 || right == 1) && getTile(x + 1 - left + right, y - 1) != DEFAULT_TILE_COLOR) || // block 2 hits other block on the left / right?
+                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR); // block 3 hits other blocks on the right / bottom?
         }
 
         if (tetromino == 'L' && rotation == 1) {
@@ -515,10 +515,10 @@ public class Board extends JPanel implements KeyListener {
         if (tetromino == 'O') {
             return (x - left < 0 || // hits left wall?
                     x + 1 + right >= BOARD_WIDTH || // hits right wall?
-                    getTile(x - left, y + down) != DEFAULT_TILE_COLOR || // block @ hits other block on the left / bottom?
-                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR || // block 1 hits other block on the right / bottom?
-                    (y > 0 && left == 1 && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR) || // block 1 hits other block on the left?
-                    (y > 0 && right == 1 && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR)); // block 2 hits other block on the right?
+                    getTile(x - left, y + down) != DEFAULT_TILE_COLOR || // @
+                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR || // 1
+                    (y > 0 && left == 1 && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR) || // 2
+                    (y > 0 && right == 1 && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR)); // 3
         }
 
         /* S */
@@ -530,10 +530,10 @@ public class Board extends JPanel implements KeyListener {
              */
             return (x - 1 - left < 0 || // hits left wall?
                     x + 1 + right >= BOARD_WIDTH || // hits right wall?
-                    getTile(x + right, y + down) != DEFAULT_TILE_COLOR || // block @ hits other block on the right?
-                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // block 3 hits other blocks on the left / bottom?
-                    (y > 0 && left == 1 && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR) || // block 1 hits other block on the left?
-                    (y > 0 && right == 1 && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR)); // block 2 hits other block on the right?
+                    getTile(x + right, y + down) != DEFAULT_TILE_COLOR || // @
+                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // 1
+                    (y > 0 && left == 1 && getTile(x - left, y - 1) != DEFAULT_TILE_COLOR) || // 2
+                    (y > 0 && right == 1 && getTile(x + 1 + right, y - 1) != DEFAULT_TILE_COLOR)); // 3
         }
 
         if (tetromino == 'S' && (rotation == 1 || rotation == 3)) {
@@ -562,10 +562,10 @@ public class Board extends JPanel implements KeyListener {
              */
             return (x - 1 - left < 0 || // hits left wall?
                     x + 1 + right >= BOARD_WIDTH || // hits right wall?
-                    getTile(x, y + down) != DEFAULT_TILE_COLOR || // block @ hits other block on the bottom?
-                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // block 3 hits other blocks on the left / bottom?
-                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR || // block 2 hits other blocks on the right / bottom?
-                    (y > 0 && (left == 1 || right == 1) && getTile(x - left + right, y - 1) != DEFAULT_TILE_COLOR)); // block 1 hits other blocks on the left / right?
+                    getTile(x, y + down) != DEFAULT_TILE_COLOR || // @
+                    getTile(x - 1 - left, y + down) != DEFAULT_TILE_COLOR || // 1
+                    getTile(x + 1 + right, y + down) != DEFAULT_TILE_COLOR || // 2
+                    (y > 0 && (left == 1 || right == 1) && getTile(x - left + right, y - 1) != DEFAULT_TILE_COLOR)); // 3
         }
 
         if (tetromino == 'T' && rotation == 1) {
@@ -658,7 +658,7 @@ public class Board extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         // play
-        if (!hasStarted && e.getKeyChar() == 'p' || e.getKeyChar() == 'з') {
+        if (!hasStarted && (e.getKeyChar() == 'p' || e.getKeyChar() == 'з')) {
             hasStarted = true;
             init();
         }
